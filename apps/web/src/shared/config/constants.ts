@@ -1,0 +1,21 @@
+// Business constants live in the shared package so the API and the storefront never disagree.
+export {
+  STORE_NAME,
+  SITE_URL,
+  CURRENCY,
+  FREE_SHIPPING_THRESHOLD,
+  SHIPPING_COST,
+  LEGAL_AGE,
+  SUBSCRIPTION_DISCOUNT,
+  BUNDLE_DISCOUNT,
+  POINTS_RATE,
+  DISPATCH_CUTOFF_HOUR,
+  COMPARE_LIMIT,
+  SUPPORT_PHONE,
+  SUPPORT_EMAIL,
+  PROMO_CODES,
+  THC_LIMIT_PERCENT,
+  VAT_RATE,
+  COUNTRY_CODES,
+  SHIPPING_COUNTRIES,
+} from '@verdant/shared'

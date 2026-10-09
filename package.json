@@ -1,0 +1,30 @@
+{
+  "name": "verdant-monorepo",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "concurrently -k -n api,web -c cyan,green \"npm:dev -w @verdant/api\" \"npm:dev -w @verdant/web\"",
+    "dev:web": "npm run dev -w @verdant/web",
+    "dev:api": "npm run dev -w @verdant/api",
+    "build": "npm run build -w @verdant/shared -w @verdant/api -w @verdant/web",
+    "typecheck": "npm run typecheck -w @verdant/shared -w @verdant/api -w @verdant/web",
+    "db:push": "npm run db:push -w @verdant/api",
+    "db:seed": "npm run db:seed -w @verdant/api",
+    "db:reset": "npm run db:reset -w @verdant/api",
+    "start:api": "npm run start -w @verdant/api",
+    "preview:web": "npm run preview -w @verdant/web",
+    "screenshots": "node scripts/capture-screenshots.mjs"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.0",
+    "typescript": "~5.8.3"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -1,0 +1,16 @@
+export const ROUTES = {
+  home: '/',
+  catalog: '/catalog',
+  product: (slug: string) => `/product/${slug}`,
+  cart: '/cart',
+  checkout: '/checkout',
+  wishlist: '/wishlist',
+  compare: '/compare',
+  orders: '/orders',
+  order: (id: string) => `/orders/${id}`,
+  about: '/about',
+  lab: '/lab-results',
+  orderSuccess: '/order/success',
+  withdrawal: '/withdrawal',
+  legal: (page: 'privacy' | 'terms' | 'imprint' | 'shipping' | 'cookies') => `/legal/${page}`,
+} as const

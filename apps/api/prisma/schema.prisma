@@ -1,0 +1,152 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id               String      @id
+  slug             String      @unique
+  name             String
+  strain           String?
+  category         String
+  shortDescription String
+  description      String
+  cbd              Float
+  thc              Float
+  /// JSON-encoded string[]
+  effects          String
+  terpenes         String
+  aroma            String
+  rating           Float
+  reviewsCount     Int
+  badges           String
+  hue              Int
+  soldToday        Int         @default(0)
+  labReportUrl     String
+  origin           String
+  /// JSON-encoded translations: { de: {...}, fr: {...} }
+  i18n             String      @default("{}")
+  createdAt        DateTime
+  variants         Variant[]
+  reviews          Review[]
+  orderItems       OrderItem[]
+
+  @@index([category])
+}
+
+model Variant {
+  id         String      @id
+  productId  String
+  product    Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+  label      String
+  /// euro cents, VAT included
+  price      Int
+  oldPrice   Int?
+  stock      Int
+  sort       Int         @default(0)
+  orderItems OrderItem[]
+  prices     PriceHistory[]
+
+  @@index([productId])
+}
+
+/// Every price a variant has had. The struck-through reference price is derived from this, never typed in.
+model PriceHistory {
+  id        String   @id @default(cuid())
+  variantId String
+  variant   Variant  @relation(fields: [variantId], references: [id], onDelete: Cascade)
+  /// euro cents, VAT included
+  price     Int
+  startedAt DateTime @default(now())
+
+  @@index([variantId, startedAt])
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  author    String
+  city      String
+  rating    Int
+  title     String
+  text      String
+  date      DateTime @default(now())
+  verified  Boolean  @default(false)
+  helpful   Int      @default(0)
+  effect    String?
+
+  @@index([productId])
+}
+
+model Order {
+  id            String      @id
+  createdAt     DateTime    @default(now())
+  locale        String      @default("en")
+  name          String
+  email         String
+  phone         String
+  country       String
+  city          String
+  postalCode    String
+  address       String
+  comment       String?
+  delivery      String
+  payment       String
+  promoCode     String?
+  /// JSON-encoded CartTotals
+  totals        String
+  deliveryPrice Int
+  grandTotal    Int
+  vatAmount     Int         @default(0)
+  pointsEarned  Int
+  items         OrderItem[]
+  withdrawals   Withdrawal[]
+
+  @@index([email])
+}
+
+model OrderItem {
+  id           String  @id @default(cuid())
+  orderId      String
+  order        Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId    String
+  product      Product @relation(fields: [productId], references: [id])
+  variantId    String
+  variant      Variant @relation(fields: [variantId], references: [id])
+  name         String
+  variantLabel String
+  price        Int
+  oldPrice     Int?
+  qty          Int
+  subscription Boolean @default(false)
+  bundle       Boolean @default(false)
+
+  @@index([orderId])
+}
+
+model Subscriber {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  locale    String   @default("en")
+  consent   Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+/// EU withdrawal-button declarations (Directive (EU) 2023/2673). Kept as evidence of what was received and when.
+model Withdrawal {
+  id        String   @id
+  orderId   String
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  email     String
+  /// JSON-encoded string[] of order line keys; empty = whole order
+  items     String   @default("[]")
+  reason    String?
+  createdAt DateTime @default(now())
+
+  @@index([orderId])
+}

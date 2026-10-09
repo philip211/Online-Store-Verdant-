@@ -1,0 +1,415 @@
+@import 'tailwindcss';
+
+@theme {
+  /* Palette from the brand reference (10 greens + gold accent) */
+  --color-forest-950: #0d1f16; /* Deep Forest */
+  --color-forest-900: #14381f; /* Pine Shade */
+  --color-forest-800: #1c4d2e; /* Emerald Depth */
+  --color-forest-700: #2e6b3f; /* Moss Green */
+  --color-forest-600: #3f8451; /* Botanical Green */
+  --color-forest-500: #5aa06d; /* Soft Fern */
+  --color-forest-400: #7bae8a; /* Sage Leaf */
+  --color-forest-300: #a1c29f; /* Olive Mist */
+  --color-forest-200: #c3ddba; /* Linden Green */
+  --color-forest-100: #e6f2e1; /* Pistachio Cream */
+  --color-forest-50: #f3f8f0;
+
+  --color-gold-300: #e3cfa3;
+  --color-gold-400: #d4b985;
+  --color-gold-500: #c9a96e;
+  --color-gold-600: #a9884d;
+
+  --color-cream: #f7f5ef;
+  --color-page: #14201a;
+  --color-ink: #0d1f16;
+
+  --font-display: 'Playfair Display', 'Georgia', serif;
+  --font-sans: 'Manrope', ui-sans-serif, system-ui, sans-serif;
+
+  /* Readable type scale: every step ~1px larger than Tailwind defaults */
+  --text-xs: 0.8125rem;   /* 13px */
+  --text-xs--line-height: 1.35;
+  --text-sm: 0.9375rem;   /* 15px */
+  --text-sm--line-height: 1.5;
+  --text-base: 1.0625rem; /* 17px */
+  --text-base--line-height: 1.6;
+  --text-lg: 1.1875rem;   /* 19px */
+  --text-lg--line-height: 1.55;
+  --text-xl: 1.375rem;    /* 22px */
+  --text-xl--line-height: 1.35;
+  --text-2xl: 1.625rem;   /* 26px */
+  --text-2xl--line-height: 1.25;
+  --text-3xl: 2rem;
+  --text-3xl--line-height: 1.2;
+  --text-4xl: 2.5rem;
+  --text-4xl--line-height: 1.1;
+  --text-5xl: 3.25rem;
+  --text-5xl--line-height: 1.05;
+  --text-6xl: 4rem;
+  --text-6xl--line-height: 1.02;
+  --text-7xl: 4.75rem;
+  --text-7xl--line-height: 1;
+
+  --radius-2xl: 1.25rem;
+  --radius-3xl: 1.75rem;
+
+  --shadow-soft: 0 10px 40px -12px rgb(13 31 22 / 0.25);
+  --shadow-glow: 0 0 0 1px rgb(201 169 110 / 0.35), 0 20px 60px -20px rgb(90 160 109 / 0.5);
+  --shadow-card: 0 1px 2px rgb(13 31 22 / 0.06), 0 12px 32px -16px rgb(13 31 22 / 0.28);
+
+  --animate-shimmer: shimmer 2.2s linear infinite;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-pulse-soft: pulse-soft 2.4s ease-in-out infinite;
+  --animate-marquee: marquee 38s linear infinite;
+  --animate-spin-slow: spin 14s linear infinite;
+
+  @keyframes shimmer {
+    0% { background-position: -600px 0; }
+    100% { background-position: 600px 0; }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-14px) rotate(2deg); }
+  }
+  @keyframes pulse-soft {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.75; transform: scale(1.04); }
+  }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+}
+
+@layer base {
+  * { @apply border-white/10; }
+  html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+  body {
+    @apply bg-page text-forest-50 font-sans;
+    font-feature-settings: 'ss01', 'cv11';
+  }
+  ::selection { @apply bg-forest-300 text-forest-950; }
+  h1, h2, h3, h4 { @apply font-display; letter-spacing: -0.01em; }
+  button, a { -webkit-tap-highlight-color: transparent; }
+  /* Grid/flex children default to min-width:auto, which lets long content push the page wider than the phone. */
+  .grid > *, .flex > * { min-width: 0; }
+  html, body { overflow-x: clip; }
+  img { @apply select-none; }
+
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: #14201a; }
+  ::-webkit-scrollbar-thumb { background: #3f8451; border-radius: 999px; border: 2px solid #14201a; }
+  ::-webkit-scrollbar-thumb:hover { background: #7bae8a; }
+}
+
+@layer components {
+  .container-x { @apply mx-auto w-full max-w-[1320px] px-4 sm:px-6 lg:px-8; }
+
+  .eyebrow {
+    @apply inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.14em] text-forest-300;
+  }
+
+  .gold-ring { @apply ring-1 ring-gold-500/60; }
+
+  .glass {
+    @apply bg-white/10 backdrop-blur-xl border border-white/15;
+  }
+  /* Frosted card used for every light surface in the glass theme */
+  .glass-card {
+    background: linear-gradient(160deg, rgb(255 255 255 / 0.09) 0%, rgb(255 255 255 / 0.045) 100%);
+    border: 1px solid rgb(255 255 255 / 0.12);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.08), 0 20px 50px -30px rgb(0 0 0 / 0.7);
+    /* unprefixed only: Lightning CSS adds -webkit- for Safari itself, and when both were written
+       by hand it kept only the prefixed one, which Chrome ignores */
+    backdrop-filter: blur(14px);
+    color: #e6f2e1;
+    position: relative;
+  }
+  /* Same look as .glass-card but without backdrop-filter: for small controls repeated many times
+     per page (card buttons, pills, chips), where dozens of blur passes add up on every frame. */
+  .glass-lite {
+    background: linear-gradient(160deg, rgb(255 255 255 / 0.14) 0%, rgb(255 255 255 / 0.08) 100%), rgb(13 31 22 / 0.55);
+    border: 1px solid rgb(255 255 255 / 0.14);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.08);
+    color: #e6f2e1;
+  }
+  /* cursor spotlight (coordinates set by useSpotlight) */
+  .glass-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 50%), rgb(255 255 255 / 0.10), transparent 60%);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .glass-card:hover::before { opacity: 1; }
+  }
+
+  /* animated underline for inline links */
+  .link-underline {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-size: 0% 1px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    transition: background-size 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .link-underline:hover { background-size: 100% 1px; }
+
+  /* arrow icons nudge on hover of the parent .group or button */
+  .group:hover .nudge, button:hover > .nudge, a:hover > .nudge { transform: translateX(3px); }
+  .nudge { transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1); }
+
+  /* inputs glow softly when focused */
+  input:focus, textarea:focus, select:focus {
+    box-shadow: 0 0 0 4px rgb(161 194 159 / 0.12), 0 8px 30px -12px rgb(161 194 159 / 0.45);
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+  }
+  .glass-dark {
+    @apply bg-forest-950/70 backdrop-blur-xl border border-white/10;
+  }
+
+  .skeleton {
+    @apply relative overflow-hidden bg-white/8 rounded-xl;
+    background-image: linear-gradient(90deg, transparent 0, rgb(255 255 255 / 0.12) 50%, transparent 100%);
+    background-size: 600px 100%;
+    background-repeat: no-repeat;
+    animation: shimmer 1.8s linear infinite;
+  }
+
+  .text-gradient-gold {
+    background: linear-gradient(120deg, #e3cfa3 0%, #c9a96e 45%, #f2e3c2 70%, #a9884d 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .noise::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.06;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .leaf-pattern {
+    background-image:
+      radial-gradient(circle at 20% 30%, rgb(161 194 159 / 0.18) 0, transparent 40%),
+      radial-gradient(circle at 80% 70%, rgb(201 169 110 / 0.12) 0, transparent 40%);
+  }
+
+  .divider-gold {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgb(201 169 110 / 0.7), transparent);
+  }
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  .text-balance { text-wrap: balance; }
+  .mask-fade-x {
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@keyframes flame-flicker {
+  0%, 100% { transform: scale(1) rotate(0deg) translateY(0); }
+  25% { transform: scale(1.15) rotate(-6deg) translateY(-1px); }
+  50% { transform: scale(0.95) rotate(4deg) translateY(0); }
+  75% { transform: scale(1.1) rotate(-3deg) translateY(-1px); }
+}
+.flame { display: inline-flex; animation: flame-flicker 1.6s ease-in-out infinite; animation-play-state: paused; }
+.flame--always, .group:hover .flame, a:hover .flame, button:hover .flame { animation-play-state: running; }
+
+/* ---------- Ambient background system ---------- */
+@keyframes blob-drift {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  33% { transform: translate3d(6vw, -4vh, 0) scale(1.08); }
+  66% { transform: translate3d(-4vw, 5vh, 0) scale(0.95); }
+}
+@keyframes leaf-drift {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  50% { transform: translate3d(1.5vw, -2vh, 0) rotate(6deg); }
+}
+@keyframes rays-sway {
+  0%, 100% { transform: rotate(-4deg) translateX(0); opacity: 0.55; }
+  50% { transform: rotate(3deg) translateX(3%); opacity: 0.85; }
+}
+
+/* Ambient layers are static on purpose: a drifting backdrop forces every backdrop-filter element
+   above it to re-blur on each frame. Blobs are radial gradients (no filter: blur), leaves keep a
+   one-time blur and are rasterised once. */
+.ambient-blob, .ambient-blob-2, .ambient-blob-3 { animation: none; }
+.ambient-leaf, .ambient-leaf-2, .ambient-leaf-3 { animation: none; }
+.ambient-glow { background: radial-gradient(closest-side, var(--glow-color) 0%, transparent 100%); }
+
+.sun-rays,
+.sun-rays-2 {
+  background: repeating-linear-gradient(
+    100deg,
+    transparent 0px,
+    transparent 38px,
+    rgb(227 207 163 / 0.06) 38px,
+    rgb(227 207 163 / 0.06) 52px,
+    transparent 52px,
+    transparent 110px,
+    rgb(123 174 138 / 0.08) 110px,
+    rgb(123 174 138 / 0.08) 128px
+  );
+  mask-image: radial-gradient(ellipse at 50% 0%, #000 0%, transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse at 50% 0%, #000 0%, transparent 70%);
+  transform-origin: top center;
+  animation: rays-sway 16s ease-in-out infinite;
+  filter: blur(6px);
+}
+.sun-rays-2 { animation-duration: 21s; animation-delay: -7s; }
+
+.leaf-tile {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220' viewBox='0 0 220 220'%3E%3Cg fill='%23000'%3E%3Cpath transform='translate(30 30) scale(1.1)' d='M32 6c3.2 8.4 4.4 16.9 2.4 25.4 6-6.4 12.6-9.6 21-9.9-5.6 6.6-10.6 10.8-18.8 13 8.4-.2 14.8 2.7 21.2 8.2-8.4 1.4-15-.2-21.4-3.7 5.5 5.2 8.6 10.7 9.8 18.3-6.4-3-10.8-7.3-13.8-13.6l.2 12.3h-2.4l.2-12.3c-3 6.3-7.4 10.6-13.8 13.6 1.2-7.6 4.3-13.1 9.8-18.3-6.4 3.5-13 5.1-21.4 3.7 6.4-5.5 12.8-8.4 21.2-8.2C18.2 32.3 13.2 28.1 7.6 21.5c8.4.3 15 3.5 21 9.9C26.6 22.9 27.8 14.4 32 6z'/%3E%3Cpath transform='translate(140 130) rotate(35 32 32) scale(0.8)' d='M32 6c3.2 8.4 4.4 16.9 2.4 25.4 6-6.4 12.6-9.6 21-9.9-5.6 6.6-10.6 10.8-18.8 13 8.4-.2 14.8 2.7 21.2 8.2-8.4 1.4-15-.2-21.4-3.7 5.5 5.2 8.6 10.7 9.8 18.3-6.4-3-10.8-7.3-13.8-13.6l.2 12.3h-2.4l.2-12.3c-3 6.3-7.4 10.6-13.8 13.6 1.2-7.6 4.3-13.1 9.8-18.3-6.4 3.5-13 5.1-21.4 3.7 6.4-5.5 12.8-8.4 21.2-8.2C18.2 32.3 13.2 28.1 7.6 21.5c8.4.3 15 3.5 21 9.9C26.6 22.9 27.8 14.4 32 6z'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 220px 220px;
+}
+
+/* ---------- Softly animated borders ---------- */
+@property --border-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+@keyframes border-flow {
+  to { --border-angle: 360deg; }
+}
+@keyframes border-breathe {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
+}
+
+@layer components {
+.border-glow,
+.border-glow-dark {
+  position: relative;
+}
+.border-glow::after,
+.border-glow-dark::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  pointer-events: none;
+  background: conic-gradient(
+    from var(--border-angle),
+    transparent 0deg,
+    var(--glow-a) 60deg,
+    var(--glow-b) 110deg,
+    transparent 170deg,
+    transparent 200deg,
+    var(--glow-b) 260deg,
+    var(--glow-a) 300deg,
+    transparent 360deg
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0.7;
+  transition: opacity 0.6s ease, filter 0.6s ease;
+}
+.border-glow { --glow-a: rgb(227 207 163 / 0.7); --glow-b: rgb(161 194 159 / 0.8); }
+.border-glow-dark { --glow-a: rgb(227 207 163 / 0.9); --glow-b: rgb(123 174 138 / 0.8); }
+
+/* Hover only brightens the static border: no rotating sweep or glow, in line with the restrained motion language. */
+.border-glow:hover::after,
+.border-glow-dark:hover::after {
+  opacity: 1;
+}
+/* stagger so neighbouring cards don't pulse in sync */
+/* vary the resting angle so neighbouring cards do not look stamped */
+.border-glow:nth-child(2n)::after, .border-glow-dark:nth-child(2n)::after { --border-angle: 120deg; }
+.border-glow:nth-child(3n)::after, .border-glow-dark:nth-child(3n)::after { --border-angle: 240deg; }
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .border-glow::after, .border-glow-dark::after { animation: none; opacity: 0.7; }
+}
+@supports not (background: conic-gradient(from var(--border-angle), red, blue)) {
+  .border-glow::after, .border-glow-dark::after {
+    background: linear-gradient(120deg, var(--glow-a), var(--glow-b));
+  }
+}
+
+/* ---------- Route transition: "closing leaves" veil (see shared/ui/PageTransition.tsx) ----------
+   Only transform/opacity are animated, on a fixed overlay, so the page underneath is never repainted. */
+.page-veil { pointer-events: none; }
+.page-veil[data-state='cover'] { pointer-events: auto; }
+.page-veil__leaf {
+  width: 80vw;
+  will-change: transform;
+  animation-duration: 0.5s;
+  animation-timing-function: cubic-bezier(0.83, 0, 0.17, 1);
+  animation-fill-mode: both;
+}
+.page-veil__leaf--l { left: -25vw; }
+.page-veil__leaf--r { right: -25vw; }
+/* Frosted glass skin: the page underneath stays visible, blurred and tinted forest green.
+   backdrop-filter is composited on the GPU, but its cost grows with blur radius and area,
+   so the radius is moderate and smaller on phones. */
+.page-veil__skin {
+  transform: skewX(-14deg);
+  background: linear-gradient(160deg, rgb(28 77 46 / 0.55) 0%, rgb(20 56 31 / 0.62) 45%, rgb(13 31 22 / 0.72) 100%);
+  backdrop-filter: blur(18px) saturate(140%);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.08);
+}
+.page-veil__skin--r { background: linear-gradient(200deg, rgb(28 77 46 / 0.55) 0%, rgb(20 56 31 / 0.62) 45%, rgb(13 31 22 / 0.72) 100%); }
+.page-veil__skin::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+@media (max-width: 640px) {
+  .page-veil__skin { backdrop-filter: blur(10px) saturate(130%); }
+}
+.page-veil[data-state='cover'] .page-veil__leaf { animation-duration: 0.38s; }
+.page-veil[data-state='cover'] .page-veil__leaf--l { animation-name: veil-close-l; }
+.page-veil[data-state='cover'] .page-veil__leaf--r { animation-name: veil-close-r; }
+.page-veil[data-state='open'] .page-veil__leaf--l { animation-name: veil-open-l; }
+.page-veil[data-state='open'] .page-veil__leaf--r { animation-name: veil-open-r; }
+.page-veil__emblem {
+  will-change: transform, opacity;
+  animation: veil-emblem-out 0.2s ease-in both;
+}
+.page-veil[data-state='cover'] .page-veil__emblem { animation: veil-emblem-in 0.32s cubic-bezier(0.22, 1, 0.36, 1) 0.24s both; }
+@keyframes veil-close-l { from { transform: translateX(-112%); } to { transform: translateX(0); } }
+@keyframes veil-close-r { from { transform: translateX(112%); } to { transform: translateX(0); } }
+@keyframes veil-open-l { from { transform: translateX(0); } to { transform: translateX(-112%); } }
+@keyframes veil-open-r { from { transform: translateX(0); } to { transform: translateX(112%); } }
+@keyframes veil-emblem-in { from { opacity: 0; transform: scale(0.7) rotate(-14deg); } to { opacity: 1; transform: none; } }
+@keyframes veil-emblem-out { from { opacity: 1; transform: none; } to { opacity: 0; transform: scale(1.12) rotate(6deg); } }
+/* Reduced motion: a plain quick fade of one panel, same phase machine (animation names keep the veil-close/veil-open prefixes). */
+@media (prefers-reduced-motion: reduce) {
+  .page-veil__skin { transform: none; backdrop-filter: none; background: #0d1f16; }
+  .page-veil__leaf { width: 100vw; left: 0; right: auto; }
+  .page-veil__leaf--r { display: none; }
+  .page-veil__emblem { animation: none; opacity: 0; }
+  .page-veil[data-state='cover'] .page-veil__leaf--l { animation: veil-close-fade 0.18s ease-out both; }
+  .page-veil[data-state='open'] .page-veil__leaf--l { animation: veil-open-fade 0.22s ease-in both; }
+}
+@keyframes veil-close-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes veil-open-fade { from { opacity: 1; } to { opacity: 0; } }
